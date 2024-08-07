@@ -95,7 +95,7 @@
       <h1 data-toc-skip>Deviations from Excel defaults</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nhs-r-community/NHSRplotthedots/blob/main/vignettes/deviations.Rmd" class="external-link"><code>vignettes/deviations.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nhs-r-community/NHSRplotthedots/blob/issue_21_fb/vignettes/deviations.Rmd" class="external-link"><code>vignettes/deviations.Rmd</code></a></small>
       <div class="hidden name"><code>deviations.Rmd</code></div>
 
     </div>
@@ -124,18 +124,18 @@ to be completely consistent.</p>
 from the moving range calculation, and hence from the process limits
 calculation. This is in line with the published paper:</p>
 <blockquote>
-<p>Nelson, Lloyd S. (1982) Control Charts for Individual Measurements,
-<em>Journal of Quality Technology</em> 14(3): 172-173</p>
+<p>Nelson, LS, “Control Charts for Individual Measurements”, Journal of
+Quality Technology, 1982, 14(34)</p>
 </blockquote>
 <p>It is discussed further in the book:</p>
 <blockquote>
-<p>Provost, Lloyd P. &amp; Murray, Sandra K. (2011) <em>The Health Care
-Data Guide: Learning from Data for Improvement</em>, San Francisco, CA:
-Jossey-Bass, pp.155, 192</p>
+<p>Lloyd P Provost &amp; Sandra K Murray, The Health Care Data Guide:
+Learning from Data for Improvement (San Francisco, CA: Jossey-Bass,
+2011), p.155 &amp; p.192.</p>
 </blockquote>
-<p>The “Making Data Count” Excel tools do not screen outlying points,
-and all points are included in the moving range and limits calculations.
-If outlying points exist, the process limits on the Excel tools will
+<p>The Making Data Count” Excel tools do not screen outlying points, and
+all points are included in the moving range and limits calculations. If
+outlying points exist, the process limits on the Excel tools will
 therefore be wider than if outlying points were screened from the
 calculation.</p>
 <p>This behaviour is controlled by the <code>screen_outliers</code>
@@ -144,9 +144,7 @@ argument. By default, <code>screen_outliers = TRUE</code>.</p>
 <code>screen_outliers = FALSE</code>.</p>
 <p>The two charts below demonstrate the default, and how to over-ride to
 replicate the Excel tools.</p>
-<div class="section level4">
-<h4 id="r-package-default">R Package Default:<a class="anchor" aria-label="anchor" href="#r-package-default"></a>
-</h4>
+<p><strong>R Package Default:</strong></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2021-03-22"</span><span class="op">)</span>, by <span class="op">=</span> <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
@@ -164,10 +162,8 @@ replicate the Excel tools.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
-</div>
-<div class="section level4">
-<h4 id="over-riding-to-replicate-making-data-count-excel-output">Over-riding to replicate “Making Data Count” Excel output:<a class="anchor" aria-label="anchor" href="#over-riding-to-replicate-making-data-count-excel-output"></a>
-</h4>
+<p><strong>Over-riding to replicate “Making Data Count” Excel
+output:</strong></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># setting screen_outliers = FALSE produces the same output as Excel</span></span>
 <span><span class="va">spc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ptd_spc.html">ptd_spc</a></span><span class="op">(</span><span class="va">df</span>, value_field <span class="op">=</span> <span class="va">data</span>, date_field <span class="op">=</span> <span class="va">date</span>, screen_outliers <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -180,7 +176,15 @@ replicate the Excel tools.</p>
 <span>      <span class="st">", LPL = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">spc_data</span><span class="op">$</span><span class="va">lpl</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="deviations_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<div class="figure">
+<img src="deviations_files/figure-html/unnamed-chunk-2-1.png" alt="An SPC chart labelled Data on the y-axis, with dates from 22 March 2021 to 8 April 2021, at 1-day intervals, on the x-axis. From left to right the line shows four grey common cause points followed by a single blue special cause improvement point followed by a further 12 grey common cause points. A caption reports the upper process limit as 4.6, the mean as 1.94 and the lower process limit as -0.72." width="672"><p class="caption">
+An SPC chart labelled Data on the y-axis, with dates from 22 March 2021
+to 8 April 2021, at 1-day intervals, on the x-axis. From left to right
+the line shows four grey common cause points followed by a single blue
+special cause improvement point followed by a further 12 grey common
+cause points. A caption reports the upper process limit as 4.6, the mean
+as 1.94 and the lower process limit as -0.72.
+</p>
 </div>
 </div>
 <div class="section level3">
@@ -191,19 +195,12 @@ plot is rebased. The Excel tool draws all lines as continuous lines.
 However, rebasing is a change to the process, so by breaking lines it
 more clearly indicates that a change in process has happened.</p>
 <p>This can be controlled with the <code>break_lines</code> argument.
-There are 4 possible values:</p>
-<ul>
-<li>“both” (default)</li>
-<li>“limit” (to just break the limit lines, but leave the process line
-connected)</li>
-<li>“process” (to just break the process line, but leave limit lines
-connected)</li>
-<li>“none” (as per the Excel tool).</li>
-</ul>
+There are 4 possible values: * “both” (default) * “limit” (to just break
+the limit lines, but leave the process line connected) * “process” (to
+just break the process line, but leave limit lines connected) * “none”
+(as per the Excel tool).</p>
 <p>Examples of these 4 are shown below:</p>
-<div class="section level4">
-<h4 id="r-package-default-1">R Package Default:<a class="anchor" aria-label="anchor" href="#r-package-default-1"></a>
-</h4>
+<p><strong>R Package Default:</strong></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spc_data</span> <span class="op">&lt;-</span> <span class="va">ae_attendances</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">period</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -215,28 +212,19 @@ connected)</li>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">spc_data</span>, break_lines <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-</div>
-<div class="section level4">
-<h4 id="just-breaking-the-limit-lines">Just breaking the limit lines:<a class="anchor" aria-label="anchor" href="#just-breaking-the-limit-lines"></a>
-</h4>
+<p><strong>just breaking the limit lines:</strong></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">spc_data</span>, break_lines <span class="op">=</span> <span class="st">"limits"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-</div>
-<div class="section level4">
-<h4 id="just-breaking-the-process-lines">Just breaking the process lines:<a class="anchor" aria-label="anchor" href="#just-breaking-the-process-lines"></a>
-</h4>
+<p><strong>just breaking the limit lines:</strong></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">spc_data</span>, break_lines <span class="op">=</span> <span class="st">"process"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-</div>
-<div class="section level4">
-<h4 id="over-riding-to-replicate-making-data-count-excel-output-1">Over-riding to replicate “Making Data Count” Excel output:<a class="anchor" aria-label="anchor" href="#over-riding-to-replicate-making-data-count-excel-output-1"></a>
-</h4>
+<p><strong>Over-riding to replicate “Making Data Count” Excel
+output:</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">spc_data</span>, break_lines <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-</div>
 </div>
 <div class="section level3">
 <h3 id="x-axis-text-angle">3. X Axis Text Angle<a class="anchor" aria-label="anchor" href="#x-axis-text-angle"></a>
@@ -250,19 +238,20 @@ the axis.</p>
 the plot function. Any of the modifications documented in the <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2 theme
 documentation</a> can be made, but in this case we just need to modify
 <code>axis.text.x</code>.</p>
-<div class="section level4">
-<h4 id="to-re-instate-90-degree-axis-text">To re-instate 90 degree axis text:<a class="anchor" aria-label="anchor" href="#to-re-instate-90-degree-axis-text"></a>
-</h4>
+<p><strong>To re-instate 90 degree axis text:</strong></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ae_attendances</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">period</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="va">attendances</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/ptd_spc.html">ptd_spc</a></span><span class="op">(</span><span class="va">attendances</span>, <span class="va">period</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>theme_override <span class="op">=</span> <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>    theme_override <span class="op">=</span> <span class="fu">theme</span><span class="op">(</span></span>
+<span>      axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="deviations_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 <hr>
-<p>Find the package code on <a href="https://github.com/nhs-r-community/NHSRplotthedots" class="external-link">GitHub</a>.</p>
-</div>
+<p>Find the package code on <a href="https://github.com/nhs-r-community/NHSRplotthedots" class="external-link">GitHub</a></p>
 </div>
 </div>
   </div>
@@ -277,7 +266,7 @@ documentation</a> can be made, but in this case we just need to modify
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Christopher Reading, Simon Wellesley-Miller, Zoë Turner, Tom Jemmett, Tom Smith, Chris Mainey, John MacKintosh, Marcos Fabietti, Fran Barton.</p>
+<p>Developed by Christopher Reading, Simon Wellesley-Miller, Zoë Turner, Tom Jemmett, Tom Smith, Chris Mainey, John MacKintosh, Marcos Fabietti.</p>
 </div>
 
 <div class="pkgdown">
