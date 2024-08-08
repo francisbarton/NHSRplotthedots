@@ -130,7 +130,7 @@
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>    <span class="at">date_field =</span> period,</span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    <span class="at">improvement_direction =</span> <span class="st">"decrease"</span></span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="reference/figures/README-example-1.png" width="100%"></p>
+<p><img src="reference/figures/README-example1-1.png" width="100%"></p>
 <p>This plot is ok on its own, but we can specify more control options if we explicitly pass it on to the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>sub_set <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">ptd_spc</span>(</span>
@@ -142,7 +142,7 @@
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">y_axis_label =</span> <span class="st">"4-hour wait breaches"</span>,</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">main_title =</span> <span class="st">"SPC of A&amp;E waiting time breaches for RQM"</span></span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<p><img src="reference/figures/README-example2-1.png" width="100%"></p>
 <p>or, equivalently:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>sub_set <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">ptd_spc</span>(</span>
@@ -211,7 +211,7 @@
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>    <span class="at">main_title =</span> <span class="st">"SPC of A&amp;E waiting time breaches for RQM"</span>,</span>
 <span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>    <span class="at">label_limits =</span> <span class="cn">TRUE</span></span>
 <span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="reference/figures/README-limits-example-1.png" width="100%"></p>
 <p>If you have rebased the chart, the mean and process limit annotations will only show for the most recent section.</p>
 </div>
 <div class="section level2">
