@@ -119,24 +119,26 @@ ptd_spc.SharedData <- function(.data, ...) { # Exclude Linting
 }
 
 #' @export
-ptd_spc.data.frame <- function(.data, # Exclude Linting
-                               value_field,
-                               date_field,
-                               facet_field,
-                               mean_field,
-                               rebase = ptd_rebase(),
-                               fix_after_n_points = NULL,
-                               improvement_direction = "increase",
-                               target = ptd_target(),
-                               trajectory,
-                               screen_outliers = TRUE) {
+ptd_spc.data.frame <- function(
+    .data, # Exclude Linting
+    value_field,
+    date_field,
+    facet_field,
+    mean_field,
+    rebase = ptd_rebase(),
+    fix_after_n_points = NULL,
+    improvement_direction = "increase",
+    target = ptd_target(),
+    trajectory,
+    screen_outliers = TRUE) {
   value_field <- rlang::quo_name(rlang::enquo(value_field))
   date_field <- rlang::quo_name(rlang::enquo(date_field))
   facet_field <- if (!missing(facet_field)) rlang::quo_name(rlang::enquo(facet_field))
   mean_field <- if (!missing(mean_field)) rlang::quo_name(rlang::enquo(mean_field))
   trajectory <- if (!missing(trajectory)) rlang::quo_name(rlang::enquo(trajectory))
 
-  # validate all inputs.  Validation problems will generate an error and stop code execution.
+  # Validate all inputs. Validation problems will generate an error and stop
+  # code execution.
   options <- ptd_spc_options(
     value_field, date_field, facet_field, mean_field, rebase,
     fix_after_n_points, improvement_direction, target, trajectory,
@@ -153,17 +155,18 @@ ptd_spc.data.frame <- function(.data, # Exclude Linting
   .data <- ptd_add_rebase_column(.data, date_field, facet_field, rebase)
 
   # Declare improvement direction as integer
-  improvement_direction <- switch(options$improvement_direction,
+  improvement_direction <- switch(options[["improvement_direction"]],
     "increase" = 1,
     "neutral" = 0,
     "decrease" = -1
   )
 
-  df <- .data %>%
-    ptd_spc_standard(options) %>%
-    ptd_calculate_point_type(improvement_direction) %>%
-    ptd_add_short_group_warnings() %>%
-    # add target column: we need to have called ptd_spc_standard to add the facet field
+  df <- .data |>
+    ptd_spc_standard(options) |>
+    ptd_calculate_point_type(improvement_direction) |>
+    ptd_add_short_group_warnings() |>
+    # Add target column: we need to have called `ptd_spc_standard()` to add the
+    # facet field
     ptd_add_target_column(target)
 
   structure(
@@ -184,44 +187,44 @@ summary.ptd_spc_df <- function(object, ...) {
   options <- attr(object, "options")
   print(options)
 
-  point_type <- object %>%
-    dplyr::group_by(.data$f, .data$rebase_group) |>
-    dplyr::filter(.data$x == max(.data$x)) |>
+  point_type <- object |>
+    dplyr::group_by(.data[["f"]], .data[["rebase_group"]]) |>
+    dplyr::filter(.data[["x"]] == max(.data[["x"]])) |>
     dplyr::select("f", "rebase_group", variation_type = "point_type")
 
-  s <- object %>%
-    dplyr::group_by(.data$f, .data$rebase_group) %>%
+  s <- object |>
+    dplyr::group_by(.data[["f"]], .data[["rebase_group"]]) |>
     dplyr::summarise(
       across(c("mean_col", "lpl", "upl"), dplyr::first),
       n = dplyr::n(),
-      common_cause = .data$n - sum(.data$special_cause_flag),
-      special_cause_improvement = sum(.data$point_type == "special_cause_improvement"),
-      special_cause_concern = sum(.data$point_type == "special_cause_concern"),
+      common_cause = .data[["n"]] - sum(.data[["special_cause_flag"]]),
+      special_cause_improvement = sum(.data[["point_type"]] == "special_cause_improvement"),
+      special_cause_concern = sum(.data[["point_type"]] == "special_cause_concern"),
       .groups = "drop"
     ) |>
     dplyr::inner_join(point_type, by = c("f", "rebase_group"))
 
-  if (!is.null(options$target)) {
+  if (!is.null(options[["target"]])) {
     at <- ptd_calculate_assurance_type(object)
 
-    s <- s %>%
-      dplyr::inner_join(at, by = "f") %>%
-      dplyr::group_by(.data$f) %>%
+    s <- s |>
+      dplyr::inner_join(at, by = "f") |>
+      dplyr::group_by(.data[["f"]]) |>
       dplyr::mutate(
         assurance_type = ifelse(
-          .data$rebase_group == max(.data$rebase_group),
-          .data$assurance_type,
+          .data[["rebase_group"]] == max(.data[["rebase_group"]]),
+          .data[["assurance_type"]],
           as.character(NA)
         )
-      ) %>%
+      ) |>
       dplyr::ungroup()
   }
 
-  if (is.null(options$facet_field)) {
+  if (is.null(options[["facet_field"]])) {
     s <- dplyr::select(s, -"f")
   }
 
-  if (is.null(options$rebase)) {
+  if (is.null(options[["rebase"]])) {
     s <- dplyr::select(s, -"rebase_group")
   }
 
