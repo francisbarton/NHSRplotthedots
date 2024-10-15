@@ -22,7 +22,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
 
   # set trajectory field
   if (is.null(trajectory_field)) {
-    .data[["trajectory"]] <- rep(as.numeric(NA), nrow(.data))
+    .data[["trajectory"]] <- NA_real_
   } else {
     assertthat::assert_that(
       !is.null(.data[[trajectory_field]]),
@@ -42,6 +42,15 @@ ptd_spc_standard <- function(.data, options = NULL) {
     .data[["facet"]] <- "no facet"
   } else {
     .data[["facet"]] <- .data[[facet_field]]
+  }
+
+  if (is.null(fix_after_n_points)) {
+    .data[["fix_y"]] <- NA_real_
+  } else {
+    .data[["fix_y"]] <- c(
+      utils::head(.data[["y"]], fix_after_n_points),
+      rep(NA_real_, (nrow(.data) - fix_after_n_points))
+    )
   }
 
   # constants
@@ -65,7 +74,6 @@ ptd_spc_standard <- function(.data, options = NULL) {
     dplyr::mutate(rebase_group = cumsum(.data[["rebase"]])) |>
     dplyr::group_by(.data[["rebase_group"]], .add = TRUE) |>
     dplyr::mutate(
-      fix_y = ifelse(dplyr::row_number() <= (fix_after_n_points %||% Inf), .data[["y"]], NA),
       mean_col = mean(.data[["fix_y"]], na.rm = TRUE),
       mr = c(NA, abs(diff(.data[["fix_y"]]))),
       amr = mean(.data[["mr"]], na.rm = TRUE),
