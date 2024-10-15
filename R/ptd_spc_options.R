@@ -15,6 +15,7 @@ ptd_spc_options <- function(
     value_field,
     date_field,
     facet_field = NULL,
+    mean_field = NULL,
     rebase = NULL,
     fix_after_n_points = NULL,
     improvement_direction = c("increase", "neutral", "decrease"),
@@ -38,6 +39,14 @@ ptd_spc_options <- function(
       is.character(facet_field),
       assertthat::is.scalar(facet_field),
       msg = "facet_field argument must be a 'character' of length 1."
+    )
+  }
+  
+  if (!is.null(mean_field)) {
+    assertthat::assert_that(
+      is.character(mean_field),
+      assertthat::is.scalar(mean_field),
+      msg = "mean_field argument must be a 'character' of length 1."
     )
   }
 

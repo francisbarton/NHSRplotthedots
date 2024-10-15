@@ -9,6 +9,7 @@ ptd_spc(
   value_field,
   date_field,
   facet_field,
+  mean_field,
   rebase = ptd_rebase(),
   fix_after_n_points = NULL,
   improvement_direction = "increase",
@@ -35,6 +36,15 @@ faceting variable. SPC logic will be applied to each group separately, with
 outputs combined. Currently accepts 1 variable only. The field name can be
 specified using non-standard evaluation (i.e. without quotation marks).}
 
+\item{mean_field}{Optional: Specify a field that contains a user-supplied
+mean value(s) for the overall data. These should therefore vary
+appropriately according to any facet variables or rebase dates supplied. If
+this parameter is specified then the mean values in this column will be
+used instead of the mean(s) that would usually be calculated by the
+package. So please calculate with appropriate caution.
+Currently accepts 1 variable only.  The field name can be specified as a
+string or as a bare name (that is, with or without quotation marks).}
+
 \item{rebase}{Specify a date vector of dates when to rebase, or, if
 \code{facet_field} is set, a named list of date vectors of when to rebase. Each
 item in the list should be named after the facet you wish to rebase. See
@@ -60,15 +70,6 @@ quotation marks).}
 
 \item{screen_outliers}{Whether to screen for outliers when calculating the
 control limits. Defaults to \code{TRUE}.}
-
-\item{mean_field}{Optional: Specify a field that contains a user-supplied
-mean value(s) for the overall data. These should therefore vary
-appropriately according to any facet variables or rebase dates supplied. If
-this parameter is specified then the mean values in this column will be
-used instead of the mean(s) that would usually be calculated by the
-package. So please calculate with appropriate caution.
-Currently accepts 1 variable only.  The field name can be specified as a
-string or as a bare name (that is, with or without quotation marks).}
 }
 \value{
 An object of type \code{ptd_spc_df}. This is a data.frame which can be
