@@ -60,6 +60,15 @@ quotation marks).}
 
 \item{screen_outliers}{Whether to screen for outliers when calculating the
 control limits. Defaults to \code{TRUE}.}
+
+\item{mean_field}{Optional: Specify a field that contains a user-supplied
+mean value(s) for the overall data. These should therefore vary
+appropriately according to any facet variables or rebase dates supplied. If
+this parameter is specified then the mean values in this column will be
+used instead of the mean(s) that would usually be calculated by the
+package. So please calculate with appropriate caution.
+Currently accepts 1 variable only.  The field name can be specified as a
+string or as a bare name (that is, with or without quotation marks).}
 }
 \value{
 An object of type \code{ptd_spc_df}. This is a data.frame which can be
