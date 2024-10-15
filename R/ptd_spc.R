@@ -21,6 +21,14 @@
 #'  faceting variable. SPC logic will be applied to each group separately, with
 #'  outputs combined. Currently accepts 1 variable only. The field name can be
 #'  specified using non-standard evaluation (i.e. without quotation marks).
+#' @param mean_field Optional: Specify a field that contains a user-supplied
+#'  mean value(s) for the overall data. These should therefore vary
+#'  appropriately according to any facet variables or rebase dates supplied. If
+#'  this parameter is specified then the mean values in this column will be
+#'  used instead of the mean(s) that would usually be calculated by the
+#'  package. So please calculate with appropriate caution.
+#'  Currently accepts 1 variable only.  The field name can be specified as a
+#'  string or as a bare name (that is, with or without quotation marks).
 #' @param rebase Specify a date vector of dates when to rebase, or, if
 #'  `facet_field` is set, a named list of date vectors of when to rebase. Each
 #'  item in the list should be named after the facet you wish to rebase. See
@@ -115,6 +123,7 @@ ptd_spc.data.frame <- function(.data, # Exclude Linting
                                value_field,
                                date_field,
                                facet_field,
+                               mean_field,
                                rebase = ptd_rebase(),
                                fix_after_n_points = NULL,
                                improvement_direction = "increase",
@@ -124,12 +133,14 @@ ptd_spc.data.frame <- function(.data, # Exclude Linting
   value_field <- rlang::quo_name(rlang::enquo(value_field))
   date_field <- rlang::quo_name(rlang::enquo(date_field))
   facet_field <- if (!missing(facet_field)) rlang::quo_name(rlang::enquo(facet_field))
+  mean_field <- if (!missing(mean_field)) rlang::quo_name(rlang::enquo(mean_field))
   trajectory <- if (!missing(trajectory)) rlang::quo_name(rlang::enquo(trajectory))
 
   # validate all inputs.  Validation problems will generate an error and stop code execution.
   options <- ptd_spc_options(
-    value_field, date_field, facet_field, rebase, fix_after_n_points,
-    improvement_direction, target, trajectory, screen_outliers
+    value_field, date_field, facet_field, mean_field, rebase,
+    fix_after_n_points, improvement_direction, target, trajectory,
+    screen_outliers
   )
 
   ptd_validate_spc_options(options, .data)
