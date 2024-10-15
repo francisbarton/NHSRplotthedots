@@ -96,6 +96,7 @@ ptd_spc <- function(
     value_field,
     date_field,
     facet_field,
+    mean_field,
     rebase = ptd_rebase(),
     fix_after_n_points = NULL,
     improvement_direction = "increase",
