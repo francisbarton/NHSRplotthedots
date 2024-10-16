@@ -18,60 +18,65 @@ ptd_spc_standard <- function(.data, options = NULL) {
   facet_field <- options[["facet_field"]]
   mean_field <- options[["mean_field"]]
   fix_after_n_points <- options[["fix_after_n_points"]]
-  trajectory_field <- options[["trajectory"]]
-
-  # set trajectory field
-  if (is.null(trajectory_field)) {
-    .data[["trajectory"]] <- NA_real_
-  } else {
-    assertthat::assert_that(
-      !is.null(.data[[trajectory_field]]),
-      msg = paste0(
-        "Trajectory column (",
-        trajectory_field,
-        ") does not exist in .data"
-      )
-    )
-    .data[["trajectory"]] <- .data[[trajectory_field]]
-  }
-
-  # Set facet/grouping or create pseudo.
-  # If no facet field is specified, bind a pseudo-facet field for
-  # grouping/joining purposes.
-  if (is.null(facet_field)) {
-    .data[["facet"]] <- "no facet"
-  } else {
-    .data[["facet"]] <- .data[[facet_field]]
-  }
-
-  if (is.null(fix_after_n_points)) {
-    .data[["fix_y"]] <- NA_real_
-  } else {
-    .data[["fix_y"]] <- c(
-      utils::head(.data[["y"]], fix_after_n_points),
-      rep(NA_real_, (nrow(.data) - fix_after_n_points))
-    )
-  }
+  traj_field <- options[["trajectory"]]
 
   # constants
   limit <- 2.66
   limitclose <- 2 * (limit / 3)
 
+  assertthat::assert_that(
+    is.null(traj_field) | traj_field %in% names(.data),
+    msg = paste0("Trajectory field (", traj_field, ") not found in .data")
+  )
+  assertthat::assert_that(
+    is.null(facet_field) | facet_field %in% names(.data),
+    msg = paste0("Facet field (", facet_field, ") not found in .data")
+  )
+  assertthat::assert_that(
+    is.null(mean_field) | mean_field %in% names(.data),
+    msg = paste0("Mean field (", mean_field, ") not found in .data")
+  )
+
+  .data |>
+    dplyr::mutate(
+      traj = dplyr::if_else(is.null(traj_field), NA_real_, .data[[traj_field]]),
+      # If no facet field is specified, bind a pseudo-facet field for
+      # grouping/joining purposes.
+      f = dplyr::if_else(is.null(facet_field), "no facet", .data[[facet_field]])
+    ) |>
+    dplyr::select(
+      x = tidyselect::any_of(date_field),
+      y = tidyselect::any_of(value_field),
+      "f",
+      "rebase",
+      trajectory = "traj"
+    ) |>
+    dplyr::arrange(dplyr::pick(c("f", "x"))) |>
+    # convert rebase 0/1s to group indices
+    dplyr::mutate(rebase_group = cumsum(.data[["rebase"]]), .by = "f") |>
+    dplyr::mutate(
+      fix_y = dplyr::if_else(
+        is.null(fix_after_n_points),
+        .data[["y"]],
+        dplyr::if_else(
+          dplyr::row_number() <= fix_after_n_points, .data[["y"]], NA_real_
+        )
+      ),
+      mean_col = dplyr::if_else(
+        is.null(mean_field),
+        mean(.data[["fix_y"]], na.rm = TRUE),
+        .data[[mean_field]]
+      ),
+      .by = c("f", "rebase_group")
+    )
+
+
+  
+
   # restructure starting data frame
   .data <- .data |>
-    dplyr::select(
-      y = tidyselect::any_of(value_field),
-      x = tidyselect::any_of(date_field),
-      f = tidyselect::any_of("facet"),
-      rebase = tidyselect::any_of("rebase"),
-      trajectory = tidyselect::any_of("trajectory"),
-    ) |>
-    # group data frame by facet
-    dplyr::group_by(.data[["f"]]) |>
-    # order data frame by facet, and x axis variable
-    dplyr::arrange(.data[["f"]], .data[["x"]]) |>
-    # convert rebase 0/1s to group indices
-    dplyr::mutate(rebase_group = cumsum(.data[["rebase"]])) |>
+    
+    
     dplyr::group_by(.data[["rebase_group"]], .add = TRUE) |>
     dplyr::mutate(
       mean_col = mean(.data[["fix_y"]], na.rm = TRUE),
