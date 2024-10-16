@@ -157,9 +157,9 @@ ptd_spc.data.frame <- function(
 
   # Declare improvement direction as integer
   improvement_direction <- switch(options[["improvement_direction"]],
-    "increase" = 1,
-    "neutral" = 0,
-    "decrease" = -1
+    "increase" = 1L,
+    "neutral" = 0L,
+    "decrease" = -1L
   )
 
   df <- .data |>
