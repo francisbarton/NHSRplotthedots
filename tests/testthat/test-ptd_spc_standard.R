@@ -1,10 +1,9 @@
 library(testthat)
 library(mockery)
 
-set.seed(123)
 data <- data.frame(
   x = as.Date("2020-01-01") + 1:20,
-  y = rnorm(20),
+  y = withr::with_seed(123, rnorm(20)),
   rebase = 0,
   target = as.double(NA)
 )
@@ -68,6 +67,25 @@ test_that("it creates the pseudo facet column if no facet_field is set", {
   # when options$target is not set
   r <- ptd_spc_standard(data, spc_options)
   expect_equal(r$f, rep("no facet", 20))
+})
+
+test_that("it uses a mean field if supplied", {
+  this_data <- data.frame(
+    x = as.Date("2020-01-01") + 1:20,
+    y = withr::with_seed(123, rnorm(20)),
+    m = 0.15, # this is not an accurate mean of y - just for testing!
+    rebase = 0,
+    target = as.double(NA)
+  )
+  o <- list(value_field = "y", date_field = "x", mean_field = "m")
+
+  r1 <- ptd_spc_standard(this_data, o)
+  expect_equal(r1[["mean_col"]], rep(0.15, 20))
+
+  o <- list(value_field = "y", date_field = "x", mean_field = NULL)
+
+  r2 <- ptd_spc_standard(this_data, o)
+  expect_equal(round(r2[["mean_col"]], 5), rep(0.14162, 20))
 })
 
 test_that("it sets the rebase_group field", {
