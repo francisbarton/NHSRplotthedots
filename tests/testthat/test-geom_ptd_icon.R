@@ -127,7 +127,7 @@ test_that("ptd_get_icons transforms the data correctly", {
     )
   )
 
-  s3 <- ptd_spc(d, "y", "x", facet = "f")
+  s3 <- ptd_spc(d, "y", "x", facet_field = "f")
   expect_equal(
     ptd_get_icons(s3),
     tibble::tibble(
@@ -137,7 +137,7 @@ test_that("ptd_get_icons transforms the data correctly", {
     )
   )
 
-  s4 <- ptd_spc(d, "y", "x", facet = "f", target = 0.5)
+  s4 <- ptd_spc(d, "y", "x", facet_field = "f", target = 0.5)
   expect_equal(
     ptd_get_icons(s4),
     tibble::tibble(
