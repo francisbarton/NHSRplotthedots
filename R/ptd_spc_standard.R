@@ -66,7 +66,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
       fix_y = dplyr::if_else(
         dplyr::row_number() <= (fix_after_n_points %||% Inf), .data[["y"]], NA_real_
       ),
-      mean_col = dplyr::if_else(
+      mean_col = ifelse(
         is.null(mean_field),
         mean(.data[["fix_y"]], na.rm = TRUE),
         .data[[mean_field]]
