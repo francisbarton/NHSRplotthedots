@@ -6,6 +6,7 @@ test_that("it returns correct data", {
     value_field = "value_field",
     date_field = "date_field",
     facet_field = "facet_field",
+    mean_field = "mean_field",
     rebase = as.Date("2020-01-01"),
     fix_after_n_points = NULL,
     improvement_direction = "increase",
@@ -17,6 +18,7 @@ test_that("it returns correct data", {
   expect_equal(r$value_field, "value_field")
   expect_equal(r$date_field, "date_field")
   expect_equal(r$facet_field, "facet_field")
+  expect_equal(r$mean_field, "mean_field")
   expect_equal(r$rebase, as.Date("2020-01-01"))
   expect_equal(r$fix_after_n_points, NULL)
   expect_equal(r$improvement_direction, "increase")
@@ -55,6 +57,23 @@ test_that("facet_field is either null, or a scalar character", {
       facet_field = c("a", "b")
     ),
     "facet_field argument must be a 'character' of length 1."
+  )
+})
+
+test_that("mean_field is either null, or a scalar character", {
+  # this should run without an error
+  ptd_spc_options("a", "b", mean_field = NULL)
+  expect_error(
+    ptd_spc_options("a", "b",
+      mean_field = 1
+    ),
+    "mean_field argument must be a 'character' of length 1."
+  )
+  expect_error(
+    ptd_spc_options("a", "b",
+      mean_field = c("a", "b")
+    ),
+    "mean_field argument must be a 'character' of length 1."
   )
 })
 
