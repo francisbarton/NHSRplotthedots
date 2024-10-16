@@ -11,11 +11,12 @@ spc_options <- list(
   value_field = "a",
   date_field = "b",
   facet_field = "c",
-  rebase = "d",
-  fix_after_n_points = "e",
-  improvement_direction = "f",
-  target = "g",
-  trajectory = "h"
+  mean_field = "d",
+  rebase = "e",
+  fix_after_n_points = "f",
+  improvement_direction = "g",
+  target = "h",
+  trajectory = "i"
 )
 
 # ptd_spc() ----
@@ -102,7 +103,7 @@ test_that("it has options as an attribute, created by ptd_spc_options", {
 
   expect_equal(o, spc_options)
   expect_called(m, 1)
-  expect_args(m, 1, "y", "x", "a", "b", "c", "d", "e", "f", "g")
+  expect_args(m, 1, "y", "x", "a", "b", "c", "d", "e", "f", "g", TRUE)
 })
 
 test_that("it validates the options", {
@@ -279,14 +280,15 @@ test_that("it accepts nse arguments as well as string", {
     value_field = y,
     date_field = x,
     facet_field = ff,
+    mean_field = mc,
     rebase = r,
     target = t,
     trajectory = tr
   )
 
   expect_called(m, 2)
-  expect_args(m, 1, "y", "x", NULL, NULL, NULL, "increase", NULL, NULL, TRUE)
-  expect_args(m, 2, "y", "x", "ff", r, NULL, "increase", t, "tr", TRUE)
+  expect_args(m, 1, "y", "x", NULL, NULL, NULL, NULL, "increase", NULL, NULL, TRUE)
+  expect_args(m, 2, "y", "x", "ff", "mc", r, NULL, "increase", t, "tr", TRUE)
 })
 
 # ptd_spc.SharedData() ----
