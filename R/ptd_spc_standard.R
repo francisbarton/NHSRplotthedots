@@ -19,6 +19,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
   mean_field <- options[["mean_field"]]
   fix_after_n_points <- options[["fix_after_n_points"]]
   trajectory_field <- options[["trajectory"]]
+  screen_outliers <- options[["screen_outliers"]] %||% TRUE
 
   # constants
   limit <- 2.66
@@ -78,7 +79,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
 
       # screen for outliers
       mr = dplyr::case_when(
-        !options[["screen_outliers"]] ~ .data[["mr"]],
+        !screen_outliers ~ .data[["mr"]],
         .data[["mr"]] < 3.267 * .data[["amr"]] ~ .data[["mr"]],
         .default = NA_real_
       ),
