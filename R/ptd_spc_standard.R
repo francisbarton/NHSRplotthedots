@@ -56,30 +56,14 @@ ptd_spc_standard <- function(.data, options = NULL) {
     dplyr::mutate(rebase_group = cumsum(.data[["rebase"]]), .by = "f") |>
     dplyr::mutate(
       fix_y = dplyr::if_else(
-        is.null(fix_after_n_points),
-        .data[["y"]],
-        dplyr::if_else(
-          dplyr::row_number() <= fix_after_n_points, .data[["y"]], NA_real_
-        )
+        dplyr::row_number() <= (fix_after_n_points %||% Inf), .data[["y"]], NA_real_
       ),
       mean_col = dplyr::if_else(
         is.null(mean_field),
         mean(.data[["fix_y"]], na.rm = TRUE),
         .data[[mean_field]]
       ),
-      .by = c("f", "rebase_group")
-    )
 
-
-  
-
-  # restructure starting data frame
-  .data <- .data |>
-    
-    
-    dplyr::group_by(.data[["rebase_group"]], .add = TRUE) |>
-    dplyr::mutate(
-      mean_col = mean(.data[["fix_y"]], na.rm = TRUE),
       mr = c(NA, abs(diff(.data[["fix_y"]]))),
       amr = mean(.data[["mr"]], na.rm = TRUE),
 
@@ -87,30 +71,29 @@ ptd_spc_standard <- function(.data, options = NULL) {
       mr = dplyr::case_when(
         !options[["screen_outliers"]] ~ .data[["mr"]],
         .data[["mr"]] < 3.267 * .data[["amr"]] ~ .data[["mr"]],
-        TRUE ~ as.numeric(NA)
+        .default = NA_real_
       ),
       amr = mean(.data[["mr"]], na.rm = TRUE),
 
       # identify lower/upper process limits
       lpl = .data[["mean_col"]] - (limit * .data[["amr"]]),
       upl = .data[["mean_col"]] + (limit * .data[["amr"]]),
+      
       # identify near lower/upper process limits
       nlpl = .data[["mean_col"]] - (limitclose * .data[["amr"]]),
       nupl = .data[["mean_col"]] + (limitclose * .data[["amr"]]),
 
       # identify any points which are outside the upper or lower process limits
-      outside_limits = (.data[["y"]] > .data[["upl"]] | .data[["y"]] < .data[["lpl"]]),
+      outside_limits = (.data[["y"]] > .data[["upl"]] | .data[["y"]] < .data[["lpl"]]), # nolint
       # identify whether a point is above or below the mean
       relative_to_mean = sign(.data[["y"]] - .data[["mean_col"]]),
 
       # Identify if a point is between the near process limits and process
       # limits.
-      close_to_limits = !.data[["outside_limits"]] & (.data[["y"]] < .data[["nlpl"]] | .data[["y"]] > .data[["nupl"]]) # nolint
+      close_to_limits = !.data[["outside_limits"]] & (.data[["y"]] < .data[["nlpl"]] | .data[["y"]] > .data[["nupl"]]), # nolint
+
+      .by = c("f", "rebase_group")
     ) |>
-    # Clean up by removing columns that no longer serve a purpose and
-    # ungrouping data.
-    dplyr::select(
-      !tidyselect::any_of(c("mr", "nlpl", "nupl", "amr", "rebase"))
-    ) |>
-    dplyr::ungroup()
+    # clean up by removing columns that no longer serve a purpose
+    dplyr::select(!c("mr", "nlpl", "nupl", "amr", "rebase"))
 }
