@@ -25,15 +25,15 @@ ptd_spc_standard <- function(.data, options = NULL) {
   limitclose <- 2 * (limit / 3)
 
   assertthat::assert_that(
-    is.null(traj_field) | traj_field %in% names(.data),
-    msg = paste0("Trajectory field (", traj_field, ") not found in .data")
+    is.null(trajectory_field) || trajectory_field %in% names(.data),
+    msg = paste0("Trajectory field (", trajectory_field, ") not found in .data")
   )
   assertthat::assert_that(
-    is.null(facet_field) | facet_field %in% names(.data),
+    is.null(facet_field) || facet_field %in% names(.data),
     msg = paste0("Facet field (", facet_field, ") not found in .data")
   )
   assertthat::assert_that(
-    is.null(mean_field) | mean_field %in% names(.data),
+    is.null(mean_field) || mean_field %in% names(.data),
     msg = paste0("Mean field (", mean_field, ") not found in .data")
   )
 
