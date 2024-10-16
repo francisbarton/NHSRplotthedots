@@ -193,14 +193,14 @@ summary.ptd_spc_df <- function(object, ...) {
     dplyr::select("f", "rebase_group", variation_type = "point_type")
 
   s <- object |>
-    dplyr::group_by(.data[["f"]], .data[["rebase_group"]]) |>
+    dplyr::rename(mean = "mean_col") |> # makes more sense for summary format
     dplyr::summarise(
-      across(c("mean_col", "lpl", "upl"), dplyr::first),
+      across(c("mean", "lpl", "upl"), dplyr::first),
       n = dplyr::n(),
       common_cause = .data[["n"]] - sum(.data[["special_cause_flag"]]),
       special_cause_improvement = sum(.data[["point_type"]] == "special_cause_improvement"),
       special_cause_concern = sum(.data[["point_type"]] == "special_cause_concern"),
-      .groups = "drop"
+      .by = c("f", "rebase_group")
     ) |>
     dplyr::inner_join(point_type, by = c("f", "rebase_group"))
 
@@ -209,15 +209,14 @@ summary.ptd_spc_df <- function(object, ...) {
 
     s <- s |>
       dplyr::inner_join(at, by = "f") |>
-      dplyr::group_by(.data[["f"]]) |>
       dplyr::mutate(
-        assurance_type = ifelse(
+        assurance_type = dplyr::if_else(
           .data[["rebase_group"]] == max(.data[["rebase_group"]]),
           .data[["assurance_type"]],
           as.character(NA)
-        )
-      ) |>
-      dplyr::ungroup()
+        ),
+        .by = "f"
+      )
   }
 
   if (is.null(options[["facet_field"]])) {
