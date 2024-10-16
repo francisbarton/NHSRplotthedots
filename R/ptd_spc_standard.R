@@ -55,6 +55,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
     dplyr::select(
       x = tidyselect::any_of(date_field),
       y = tidyselect::any_of(value_field),
+      m = tidyselect::any_of(mean_field),
       "f",
       "rebase",
       "trajectory"
@@ -69,7 +70,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
       mean_col = ifelse(
         is.null(mean_field),
         mean(.data[["fix_y"]], na.rm = TRUE),
-        .data[[mean_field]]
+        .data[["m"]]
       ),
 
       mr = c(NA, abs(diff(.data[["fix_y"]]))),
