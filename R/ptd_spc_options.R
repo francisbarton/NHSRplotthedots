@@ -117,6 +117,7 @@ ptd_spc_options <- function(
       value_field = value_field,
       date_field = date_field,
       facet_field = facet_field,
+      mean_field = mean_field,
       rebase = rebase,
       fix_after_n_points = fix_after_n_points,
       improvement_direction = improvement_direction,
