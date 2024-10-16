@@ -18,7 +18,7 @@ ptd_spc_standard <- function(.data, options = NULL) {
   facet_field <- options[["facet_field"]]
   mean_field <- options[["mean_field"]]
   fix_after_n_points <- options[["fix_after_n_points"]]
-  traj_field <- options[["trajectory"]]
+  trajectory_field <- options[["trajectory"]]
 
   # constants
   limit <- 2.66
@@ -37,19 +37,27 @@ ptd_spc_standard <- function(.data, options = NULL) {
     msg = paste0("Mean field (", mean_field, ") not found in .data")
   )
 
+  if (is.null(trajectory_field)) {
+    .data[["trajectory"]] <- NA_real_
+  } else {
+    .data[["trajectory"]] <- .data[[trajectory_field]]
+  }
+  
+  # If no facet field is specified, bind a pseudo-facet field for
+  # grouping/joining purposes.
+  if (is.null(facet_field)) {
+    .data[["f"]] <- "no facet"
+  } else {
+    .data[["f"]] <- .data[[facet_field]]
+  }
+
   .data |>
-    dplyr::mutate(
-      traj = dplyr::if_else(is.null(traj_field), NA_real_, .data[[traj_field]]),
-      # If no facet field is specified, bind a pseudo-facet field for
-      # grouping/joining purposes.
-      f = dplyr::if_else(is.null(facet_field), "no facet", .data[[facet_field]])
-    ) |>
     dplyr::select(
       x = tidyselect::any_of(date_field),
       y = tidyselect::any_of(value_field),
       "f",
       "rebase",
-      trajectory = "traj"
+      "trajectory"
     ) |>
     dplyr::arrange(dplyr::pick(c("f", "x"))) |>
     # convert rebase 0/1s to group indices
