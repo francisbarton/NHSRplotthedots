@@ -351,15 +351,15 @@ test_that("it outputs expected content", {
   stub(ptd_spc.data.frame, "ptd_assurance_type", "assurance_type")
 
   s1 <- ptd_spc.data.frame(d, "y", "x")
-  expect_snapshot_output(summary(s1))
+  expect_snapshot(summary(s1))
 
   s2 <- ptd_spc.data.frame(d, "y", "x", rebase = as.Date("2020-01-01"))
-  expect_snapshot_output(summary(s2))
+  expect_snapshot(summary(s2))
 
   suppressWarnings(
     s3 <- ptd_spc.data.frame(d, "y", "x", facet_field = "facet")
   )
-  expect_snapshot_output(summary(s3))
+  expect_snapshot(summary(s3))
 
   suppressWarnings(
     s4 <- ptd_spc.data.frame(
@@ -370,14 +370,14 @@ test_that("it outputs expected content", {
       facet_field = "facet"
     ) # nolint
   )
-  expect_snapshot_output(summary(s4))
+  expect_snapshot(summary(s4))
 
   m <- mock(tibble::tibble(f = "no facet", assurance_type = "a"))
   stub(summary.ptd_spc_df, "ptd_calculate_assurance_type", m)
 
   s5 <- ptd_spc.data.frame(d, "y", "x", target = 0.5)
 
-  expect_snapshot_output(summary(s5))
+  expect_snapshot(summary(s5))
   expect_called(m, 1)
 })
 
