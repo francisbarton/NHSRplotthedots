@@ -11,14 +11,15 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  fig.width = 7, fig.height = 5,
+  fig.width = 7,
+  fig.height = 5,
   collapse = TRUE,
   comment = "#>"
 )
 library(dplyr)
 library(ggplot2)
-library(NHSRplotthedots)
 library(NHSRdatasets)
+library(NHSRplotthedots)
 ```
 
 The overall intent of this package is to mimic as completely as possible the output available from the [NHS Making Data Count][mdc] Excel tools.
@@ -46,7 +47,7 @@ The "Making Data Count" Excel tools do not screen outlying points, and all point
 If outlying points exist, the process limits on the Excel tools will therefore be wider than if outlying points were screened from the calculation.
 
 This behaviour is controlled by the `screen_outliers` argument.
-By default, `screen_outliers = TRUE`.  
+By default, `screen_outliers = TRUE`.
 
 To replicate the Excel method, set the argument `screen_outliers = FALSE`.
 
@@ -65,9 +66,12 @@ spc_data |>
   plot() +
   labs(
     caption = paste(
-      "UPL = ", round(spc_data$upl[1], 2),
-      ", Mean = ", round(spc_data$mean_col[1], 2),
-      ", LPL = ", round(spc_data$lpl[1], 2)
+      "UPL = ",
+      round(spc_data$upl[1], 2),
+      ", Mean = ",
+      round(spc_data$mean_col[1], 2),
+      ", LPL = ",
+      round(spc_data$lpl[1], 2)
     )
   )
 ```
@@ -86,9 +90,12 @@ spc_data |>
   plot() +
   labs(
     caption = paste(
-      "UPL = ", round(spc_data$upl[1], 2),
-      ", Mean = ", round(spc_data$mean_col[1], 2),
-      ", LPL = ", round(spc_data$lpl[1], 2)
+      "UPL = ",
+      round(spc_data$upl[1], 2),
+      ", Mean = ",
+      round(spc_data$mean_col[1], 2),
+      ", LPL = ",
+      round(spc_data$lpl[1], 2)
     )
   )
 ```
@@ -142,7 +149,7 @@ plot(spc_data, break_lines = "none")
 ### 3. X Axis Text Angle
 
 As can be seen in the plots above, by default this package will print x axis text rotated by 45 degrees for better utilisation of space, and readability.
-Excel's behaviour is to print this text at 90 degrees to the axis. 
+Excel's behaviour is to print this text at 90 degrees to the axis.
 
 Text angle can be over-ridden by passing a ggplot `theme()` into the `theme_override` argument of the plot function.
 Any of the modifications documented in the

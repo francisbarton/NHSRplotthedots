@@ -9,7 +9,8 @@ vignette: >
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(
-  fig.width = 7, fig.height = 5,
+  fig.width = 7,
+  fig.height = 5,
   collapse = TRUE,
   comment = "#>"
 )
@@ -92,7 +93,8 @@ To rebase (change the modelling period for control limits), we can pass a vector
 change_set <- ae_attendances |>
   filter(org_code == "RRK", type == 1)
 
-ptd_spc(change_set,
+ptd_spc(
+  change_set,
   value_field = breaches,
   date_field = period,
   improvement_direction = "decrease",

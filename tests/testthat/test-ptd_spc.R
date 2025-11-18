@@ -362,7 +362,13 @@ test_that("it outputs expected content", {
   expect_snapshot_output(summary(s3))
 
   suppressWarnings(
-    s4 <- ptd_spc.data.frame(d, "y", "x", rebase = as.Date("2020-01-01"), facet_field = "facet") # nolint
+    s4 <- ptd_spc.data.frame(
+      d,
+      "y",
+      "x",
+      rebase = as.Date("2020-01-01"),
+      facet_field = "facet"
+    ) # nolint
   )
   expect_snapshot_output(summary(s4))
 

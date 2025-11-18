@@ -10,7 +10,8 @@ ptd_add_rebase_column <- function(.data, date_field, facet_field, rebase) {
         function(i) {
           data.frame(
             d = to_datetime(rebase[[i]]),
-            f = names(rebase)[[i]], rebase = 1
+            f = names(rebase)[[i]],
+            rebase = 1
           )
         }
       )

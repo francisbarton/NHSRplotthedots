@@ -32,18 +32,26 @@ ptd_calculate_point_type <- function(.data, improvement_direction) {
 ptd_seven_point_one_side_mean <- function(v) {
   # pad the vector with 6 zero's at the beginning
   vp <- c(rep(0, 6), v)
-  vapply(seq_along(v) + 6, function(i) {
-    all(vp[[i]] == vp[i - 1:6]) & vp[[i]] != 0
-  }, numeric(1))
+  vapply(
+    seq_along(v) + 6,
+    function(i) {
+      all(vp[[i]] == vp[i - 1:6]) & vp[[i]] != 0
+    },
+    numeric(1)
+  )
 }
 
 ptd_part_of_seven_trend <- function(v) {
   # pad the vector with 6 zero's at the beginning
   vp <- c(v, rep(0, 6))
   # either, this value is already part of 7, or one of the following 6 points is
-  vapply(seq_along(v), function(i) {
-    any(abs(vp[i + 0:6]) == 1)
-  }, numeric(1))
+  vapply(
+    seq_along(v),
+    function(i) {
+      any(abs(vp[i + 0:6]) == 1)
+    },
+    numeric(1)
+  )
 }
 
 ptd_seven_point_trend <- function(y) {
@@ -54,16 +62,21 @@ ptd_seven_point_trend <- function(y) {
   # the first 6 points will be 0
   c(
     rep(0, 6),
-    vapply(seq_along(y)[-(1:6)], function(i) { # Exclude Linting
-      d <- sign(diff(y[i - 0:6])) * -1
-      if (all(d == 1)) {
-        return(1)
-      }
-      if (all(d == -1)) {
-        return(-1)
-      }
-      0
-    }, numeric(1))
+    vapply(
+      seq_along(y)[-(1:6)],
+      function(i) {
+        # Exclude Linting
+        d <- sign(diff(y[i - 0:6])) * -1
+        if (all(d == 1)) {
+          return(1)
+        }
+        if (all(d == -1)) {
+          return(-1)
+        }
+        0
+      },
+      numeric(1)
+    )
   )
 }
 
@@ -75,21 +88,35 @@ ptd_two_in_three <- function(v, rtm) {
   vp <- c(0, 0, v, 0, 0)
   rtmp <- c(0, 0, rtm, 0, 0) # relative to mean
 
-  vapply(seq_along(v), function(i) {
-    ((sum(vp[i + 0:2]) >= 2) & (abs(sum(rtmp[i + 0:2])) == 3)) ||
-      ((sum(vp[i + 1:3]) >= 2) & (abs(sum(rtmp[i + 1:3])) == 3)) ||
-      ((sum(vp[i + 2:4]) >= 2) & (abs(sum(rtmp[i + 2:4])) == 3))
-  }, numeric(1))
+  vapply(
+    seq_along(v),
+    function(i) {
+      ((sum(vp[i + 0:2]) >= 2) & (abs(sum(rtmp[i + 0:2])) == 3)) ||
+        ((sum(vp[i + 1:3]) >= 2) & (abs(sum(rtmp[i + 1:3])) == 3)) ||
+        ((sum(vp[i + 2:4]) >= 2) & (abs(sum(rtmp[i + 2:4])) == 3))
+    },
+    numeric(1)
+  )
 }
 
 ptd_part_of_two_in_three <- function(v, x) {
   as.numeric(v == 1 & abs(x) == 1)
 }
 
-ptd_special_cause_type <- function(y, relative_to_mean, close_to_limits, outside_limits) {
+ptd_special_cause_type <- function(
+  y,
+  relative_to_mean,
+  close_to_limits,
+  outside_limits
+) {
   part_seven_point_trend <- ptd_part_of_seven_trend(ptd_seven_point_trend(y)) # Exclude Linting
-  part_two_in_three <- ptd_part_of_two_in_three(ptd_two_in_three(close_to_limits, relative_to_mean), close_to_limits) # Exclude Linting
-  part_seven_point_one_side_mean <- ptd_part_of_seven_trend(ptd_seven_point_one_side_mean(relative_to_mean)) # Exclude Linting
+  part_two_in_three <- ptd_part_of_two_in_three(
+    ptd_two_in_three(close_to_limits, relative_to_mean),
+    close_to_limits
+  ) # Exclude Linting
+  part_seven_point_one_side_mean <- ptd_part_of_seven_trend(ptd_seven_point_one_side_mean(
+    relative_to_mean
+  )) # Exclude Linting
 
   # calculate the sign of difference of points in y
   sdy <- sign(diff(y))
@@ -103,10 +130,22 @@ ptd_special_cause_type <- function(y, relative_to_mean, close_to_limits, outside
   above_or_below <- ifelse(relative_to_mean > 0, "Above", "Below") # Exclude Linting
 
   dplyr::case_when(
-    outside_limits != 0 ~ ifelse(relative_to_mean == 1, "Above UCL", "Below LCL"),
-    part_seven_point_trend != 0 ~ paste0("7 Point Trend (", ifelse(sdy == 1, "In", "De"), "creasing)"),
+    outside_limits != 0 ~ ifelse(
+      relative_to_mean == 1,
+      "Above UCL",
+      "Below LCL"
+    ),
+    part_seven_point_trend != 0 ~ paste0(
+      "7 Point Trend (",
+      ifelse(sdy == 1, "In", "De"),
+      "creasing)"
+    ),
     part_two_in_three != 0 ~ paste0("2 in 3 ", above_or_below, " CL"),
-    part_seven_point_one_side_mean != 0 ~ paste0("7 Points ", above_or_below, " CL"),
+    part_seven_point_one_side_mean != 0 ~ paste0(
+      "7 Points ",
+      above_or_below,
+      " CL"
+    ),
     .default = "Common Cause"
   )
 }

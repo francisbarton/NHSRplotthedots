@@ -42,7 +42,11 @@ test_that("it groups, then ungroups data", {
   )
 
   expect_called(m1, 1)
-  expect_call(m1, 1, dplyr::group_by(., dplyr::across(c("f", "rebase_group"))))
+  expect_call(
+    m1,
+    1,
+    dplyr::group_by(.data, dplyr::pick(c("f", "rebase_group")))
+  )
 
   expect_called(m2, 1)
   expect_call(m2, 1, dplyr::ungroup(.))

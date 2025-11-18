@@ -84,21 +84,23 @@
 #'
 #' plot(my_spc) + ggplot2::theme_classic()
 ptd_spc <- function(
-    .data,
-    value_field,
-    date_field,
-    facet_field,
-    rebase = ptd_rebase(),
-    fix_after_n_points = NULL,
-    improvement_direction = "increase",
-    target = ptd_target(),
-    trajectory,
-    screen_outliers = TRUE) {
+  .data,
+  value_field,
+  date_field,
+  facet_field,
+  rebase = ptd_rebase(),
+  fix_after_n_points = NULL,
+  improvement_direction = "increase",
+  target = ptd_target(),
+  trajectory,
+  screen_outliers = TRUE
+) {
   UseMethod("ptd_spc")
 }
 
 #' @export
-ptd_spc.SharedData <- function(.data, ...) { # Exclude Linting
+ptd_spc.SharedData <- function(.data, ...) {
+  # Exclude Linting
   key <- .data$key()
   set <- .data$groupName()
 
@@ -111,25 +113,38 @@ ptd_spc.SharedData <- function(.data, ...) { # Exclude Linting
 }
 
 #' @export
-ptd_spc.data.frame <- function(.data, # Exclude Linting
-                               value_field,
-                               date_field,
-                               facet_field,
-                               rebase = ptd_rebase(),
-                               fix_after_n_points = NULL,
-                               improvement_direction = "increase",
-                               target = ptd_target(),
-                               trajectory,
-                               screen_outliers = TRUE) {
+ptd_spc.data.frame <- function(
+  .data, # Exclude Linting
+  value_field,
+  date_field,
+  facet_field,
+  rebase = ptd_rebase(),
+  fix_after_n_points = NULL,
+  improvement_direction = "increase",
+  target = ptd_target(),
+  trajectory,
+  screen_outliers = TRUE
+) {
   value_field <- rlang::quo_name(rlang::enquo(value_field))
   date_field <- rlang::quo_name(rlang::enquo(date_field))
-  facet_field <- if (!missing(facet_field)) rlang::quo_name(rlang::enquo(facet_field))
-  trajectory <- if (!missing(trajectory)) rlang::quo_name(rlang::enquo(trajectory))
+  facet_field <- if (!missing(facet_field)) {
+    rlang::quo_name(rlang::enquo(facet_field))
+  }
+  trajectory <- if (!missing(trajectory)) {
+    rlang::quo_name(rlang::enquo(trajectory))
+  }
 
   # validate all inputs.  Validation problems will generate an error and stop code execution.
   options <- ptd_spc_options(
-    value_field, date_field, facet_field, rebase, fix_after_n_points,
-    improvement_direction, target, trajectory, screen_outliers
+    value_field,
+    date_field,
+    facet_field,
+    rebase,
+    fix_after_n_points,
+    improvement_direction,
+    target,
+    trajectory,
+    screen_outliers
   )
 
   ptd_validate_spc_options(options, .data)
@@ -142,7 +157,8 @@ ptd_spc.data.frame <- function(.data, # Exclude Linting
   .data <- ptd_add_rebase_column(.data, date_field, facet_field, rebase)
 
   # Declare improvement direction as integer
-  improvement_direction <- switch(options$improvement_direction,
+  improvement_direction <- switch(
+    options$improvement_direction,
     "increase" = 1,
     "neutral" = 0,
     "decrease" = -1
@@ -185,7 +201,9 @@ summary.ptd_spc_df <- function(object, ...) {
       across(c("mean_col", "lpl", "upl"), dplyr::first),
       n = dplyr::n(),
       common_cause = .data$n - sum(.data$special_cause_flag),
-      special_cause_improvement = sum(.data$point_type == "special_cause_improvement"),
+      special_cause_improvement = sum(
+        .data$point_type == "special_cause_improvement"
+      ),
       special_cause_concern = sum(.data$point_type == "special_cause_concern"),
       .groups = "drop"
     ) |>

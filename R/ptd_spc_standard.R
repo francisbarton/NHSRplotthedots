@@ -64,7 +64,11 @@ ptd_spc_standard <- function(.data, options = NULL) {
     dplyr::mutate(rebase_group = cumsum(.data$rebase)) |>
     dplyr::group_by(dplyr::pick("rebase_group"), .add = TRUE) |>
     dplyr::mutate(
-      fix_y = ifelse(dplyr::row_number() <= (fix_after_n_points %||% Inf), .data$y, NA),
+      fix_y = ifelse(
+        dplyr::row_number() <= (fix_after_n_points %||% Inf),
+        .data$y,
+        NA
+      ),
       mean_col = mean(.data$fix_y, na.rm = TRUE),
       mr = c(NA, abs(diff(.data$fix_y))),
       amr = mean(.data$mr, na.rm = TRUE),
