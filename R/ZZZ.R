@@ -1,8 +1,3 @@
-#' @importFrom tidyselect any_of
-#' @importFrom dplyr %>%
-#' @import rlang
-NULL
-
 #' null replacement
 #'
 #' if `a` is null, choose `b`.

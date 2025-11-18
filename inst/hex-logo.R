@@ -57,8 +57,8 @@
 #'   20, 0, c("#ED6571", rep("#FFCF86", 3), "#4E9BB9"),
 #'   20, .5, c("#ED6571", "#F69489", "#FFCF86", "#91CBD7", "#4E9BB9"),
 #'   20, .5, c("#ED6571", rep("#FFCF86", 3), "#4E9BB9")
-#' ) %>%
-#'   dplyr::rowwise() %>%
+#' ) |>
+#'   dplyr::rowwise() |>
 #'   dplyr::mutate(
 #'     out_filename = stringr::str_c(
 #'       "inst/images/logo_w_",
@@ -69,7 +69,7 @@
 #'       point_stroke,
 #'       "st.png"
 #'     )
-#'   ) %>%
+#'   ) |>
 #'   purrr::pmap(hex_logo)
 #' }
 hex_logo <- function(
@@ -189,7 +189,7 @@ simple_pointplot <- function(
     fill = cut(y, breaks = c(-Inf, fill_palette_breaks, Inf))
   )
   # create the subplot: points and line
-  subplot <- demo_data_tb %>%
+  subplot <- demo_data_tb |>
     ggplot2::ggplot(ggplot2::aes(x, y)) +
     ggplot2::geom_line(size = line_size, colour = line_colour) +
     ggplot2::geom_point(
@@ -232,7 +232,7 @@ demo_data_tb <- data.frame(
 )
 
 # create the subplot: points and line
-subplot <- demo_data_tb %>%
+subplot <- demo_data_tb |>
   ggplot2::ggplot(aes(x, y)) +
   ggplot2::geom_line(size = line_size, colour = line_colour) +
   ggplot2::geom_point(

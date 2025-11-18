@@ -20,7 +20,7 @@ geom_ptd_icon_draw_panel <- function(
 
   # use the coord transformation for the colours, but then set the x, y
   # coordinates manually (inside the viewport)
-  d <- coord$transform(data, panel_params) %>%
+  d <- coord$transform(data, panel_params) |>
     dplyr::mutate(
       x = ifelse(.data$type == "variation", 3.5 * radius, radius),
       y = radius / 2
@@ -145,10 +145,10 @@ ptd_get_icons <- function(.x) {
     system.file("icons", "assurance", icon, package = "NHSRplotthedots")
   }
 
-  variation <- .x %>%
-    dplyr::group_by(.data$f) %>%
-    dplyr::filter(.data$x == max(.data$x)) %>%
-    dplyr::ungroup() %>%
+  variation <- .x |>
+    dplyr::group_by(.data$f) |>
+    dplyr::filter(.data$x == max(.data$x)) |>
+    dplyr::ungroup() |>
     dplyr::transmute(
       .data$f,
       type = "variation",
@@ -159,9 +159,9 @@ ptd_get_icons <- function(.x) {
     return(variation)
   }
 
-  assurance <- .x %>%
-    ptd_calculate_assurance_type() %>%
-    dplyr::filter(!is.na(.data$assurance_type)) %>%
+  assurance <- .x |>
+    ptd_calculate_assurance_type() |>
+    dplyr::filter(!is.na(.data$assurance_type)) |>
     dplyr::transmute(
       .data$f,
       type = "assurance",

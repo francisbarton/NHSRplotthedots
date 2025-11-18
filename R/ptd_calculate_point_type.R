@@ -11,8 +11,8 @@
 #' @noRd
 ptd_calculate_point_type <- function(.data, improvement_direction) {
   # Begin plot the dots logical tests
-  .data %>%
-    dplyr::group_by(.data$f, .data$rebase_group) %>%
+  .data |>
+    dplyr::group_by(dplyr::pick(c("f", "rebase_group"))) |>
     dplyr::mutate(
       special_cause_type = ptd_special_cause_type(
         .data$y,
@@ -21,8 +21,11 @@ ptd_calculate_point_type <- function(.data, improvement_direction) {
         .data$outside_limits
       ),
       special_cause_flag = .data[["special_cause_type"]] != "Common Cause",
-      point_type = ptd_point_type(.data[["special_cause_type"]], improvement_direction)
-    ) %>%
+      point_type = ptd_point_type(
+        .data[["special_cause_type"]],
+        improvement_direction
+      )
+    ) |>
     dplyr::ungroup()
 }
 

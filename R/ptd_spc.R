@@ -148,11 +148,12 @@ ptd_spc.data.frame <- function(.data, # Exclude Linting
     "decrease" = -1
   )
 
-  df <- .data %>%
-    ptd_spc_standard(options) %>%
-    ptd_calculate_point_type(improvement_direction) %>%
-    ptd_add_short_group_warnings() %>%
-    # add target column: we need to have called ptd_spc_standard to add the facet field
+  df <- .data |>
+    ptd_spc_standard(options) |>
+    ptd_calculate_point_type(improvement_direction) |>
+    ptd_add_short_group_warnings() |>
+    # add target column: we need to have called ptd_spc_standard to add the
+    # facet field
     ptd_add_target_column(target)
 
   structure(
@@ -173,13 +174,13 @@ summary.ptd_spc_df <- function(object, ...) {
   options <- attr(object, "options")
   print(options)
 
-  point_type <- object %>%
+  point_type <- object |>
     dplyr::group_by(.data$f, .data$rebase_group) |>
     dplyr::filter(.data$x == max(.data$x)) |>
     dplyr::select("f", "rebase_group", variation_type = "point_type")
 
-  s <- object %>%
-    dplyr::group_by(.data$f, .data$rebase_group) %>%
+  s <- object |>
+    dplyr::group_by(dplyr::pick(c("f", "rebase_group"))) |>
     dplyr::summarise(
       across(c("mean_col", "lpl", "upl"), dplyr::first),
       n = dplyr::n(),
@@ -193,16 +194,16 @@ summary.ptd_spc_df <- function(object, ...) {
   if (!is.null(options$target)) {
     at <- ptd_calculate_assurance_type(object)
 
-    s <- s %>%
-      dplyr::inner_join(at, by = "f") %>%
-      dplyr::group_by(.data$f) %>%
+    s <- s |>
+      dplyr::inner_join(at, by = "f") |>
+      dplyr::group_by(dplyr::pick("f")) |>
       dplyr::mutate(
         assurance_type = ifelse(
           .data$rebase_group == max(.data$rebase_group),
           .data$assurance_type,
           as.character(NA)
         )
-      ) %>%
+      ) |>
       dplyr::ungroup()
   }
 
