@@ -23,21 +23,20 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
-Imports: 
+Imports:
     assertthat,
     base64enc,
     crayon,
     dplyr,
     ggplot2,
     grid,
-    magrittr,
     plotly,
     rlang,
     rsvg,
     scales,
     stringr,
     tidyselect (>= 1.2.0)
-Suggests: 
+Suggests:
     covr,
     cyclocomp,
     hexSticker,
