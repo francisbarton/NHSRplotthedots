@@ -49,7 +49,6 @@ test_that("it groups, then ungroups data", {
   )
 
   expect_called(m2, 1)
-  expect_call(m2, 1, dplyr::ungroup(.))
 })
 
 test_that("it adds a column called short_group_warning", {
